@@ -1,10 +1,19 @@
 import { bootstrapCameraKit } from '@snap/camera-kit';
 
+interface HandleNameChangeInterface {
+  target: HTMLInputElement;
+}
+
+interface DOMEvent<T extends EventTarget> extends Event {
+  readonly target: T
+}
+
 (async function () {
   const cameraKit = await bootstrapCameraKit({
     apiToken: 'eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSldUIn0.eyJhdWQiOiJjYW52YXMtY2FudmFzYXBpIiwiaXNzIjoiY2FudmFzLXMyc3Rva2VuIiwibmJmIjoxNzAxOTY2Njg1LCJzdWIiOiI0NmVmMzEyZS1hYmQzLTQ1NzUtYjZlOC1iMTViYjQzY2FhM2J-U1RBR0lOR35jN2M2YWE0ZC1jZTNhLTRhODktODc4MS05NjczZjhhYjdkNDgifQ.XTLV196Zqe9Hai7-f6rMD_RnrJkwCMoqy9N3IsVSynM'
   });
 
+  
   const liveRenderTarget = document.getElementById(
     'canvas'
   ) as HTMLCanvasElement;
@@ -38,15 +47,13 @@ import { bootstrapCameraKit } from '@snap/camera-kit';
 
   // Append the ComboBox to the 'workArea' element
   (document.getElementById('work-area')  as HTMLCanvasElement).appendChild(comboBox);
-
+  
   // Event listener for ComboBox selection change
-  comboBox.addEventListener('change', async (event) => {
-    if (event != null && event.target != null && event.target.value != null) {
-      const selectedIndex = event.target.value;
-      await session.applyLens(lens.lenses[selectedIndex]);
+  comboBox.addEventListener('change', async (event: any) => {
+    if (event != null && event.target != null) {
+      await session.applyLens(lens.lenses[event.target.value]);
     }
   });
-
   
   comboBox.value = rand.toString();
   await session.applyLens(lens.lenses[rand]);
